@@ -111,13 +111,15 @@ spec:
               readOnly: true              
               {{- end }}     
               {{- end }}                                   
+          {{ if .Values.livenessTests.enabled }}
           livenessProbe:
             exec:
                command:
                  - /bin/bash
                  - /tmp/docker-mailserver/am-i-healthy.sh
-               initialDelaySeconds: 600
-               timeoutSeconds: 60
-               failureThreshold: 3
+            initialDelaySeconds: 600
+            timeoutSeconds: 60
+            failureThreshold: 3
+          {{ end }}
       restartPolicy: "Always"
 
