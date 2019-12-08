@@ -50,7 +50,14 @@ spec:
               mountPath: /tmp/configmaps
               readOnly: true         
             - name: config
-              mountPath: /tmp/docker-mailserver/                   
+              mountPath: /tmp/docker-mailserver/
+        - name: prep-fetchmail
+          image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+          command: [ 'sh','-c', 'chown -R fetchmail /var/lib/fetchmail' ]
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/fetchmail
+              subPath: lib-fetchmail
         
       containers: 
         - name: dockermailserver
@@ -79,6 +86,9 @@ spec:
             - name: data
               mountPath: /var/mail-state
               subPath: mail-state
+            - name: data
+              mountPath: /var/lib/fetchmail
+              subPath: lib-fetchmail
             - name: configmap
               subPath: dovecot.cf
               mountPath: /etc/dovecot/conf.d/zz-custom.cf
