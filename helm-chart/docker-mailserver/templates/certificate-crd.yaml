@@ -8,6 +8,9 @@ spec:
   issuerRef:
     name: {{ default "letsencrypt-staging" .Values.ssl.issuer.name }}
     kind: {{ default "ClusterIssuer" .Values.ssl.issuer.kind }}
+{{ if .Values.customCertificateConfig }}
+{{ toYaml .Values.customCertificateConfig | indent 2 }}
+{{ else }}
   commonName: '*.{{ default "example.com" .Values.ssl.dnsname }}'
   dnsNames:
   - {{ default "example.com" .Values.ssl.dnsname }}
@@ -18,3 +21,4 @@ spec:
       domains:
       - '*.{{ default "example.com" .Values.ssl.dnsname }}'
       - {{ default "example.com" .Values.ssl.dnsname }}
+{{ end }}
